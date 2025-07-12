@@ -10,7 +10,7 @@ const mangayomiSources = [{
   "version": "0.0.1",
   "dateFormat": "",
   "dateFormatLocale": "",
-  "pkgPath": "javascript/anime/src/zh/hanime1.js"
+  "pkgPath": "anime/src/zh/hanime1.js"
 }];
 
 class DefaultExtension extends MProvider {
