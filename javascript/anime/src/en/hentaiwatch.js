@@ -6,6 +6,7 @@ const mangayomiSources = [{
   "iconUrl": "https://github.com/hubgit120/myext/blob/main/javascript/icon/en.hentaiwatch.png",
   "typeSource": "single",
   "itemType": 1,
+  "isNsfw": true,
   "version": "0.0.1",
   "pkgPath": ""
 }];
