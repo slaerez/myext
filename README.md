@@ -1,2 +1,2 @@
-# myext
-Extensions for apps that support the Mangayomi system
+# myomiext
+Extensions for Mangayomi (https://github.com/kodjodevf/mangayomi) and others that support its system 
