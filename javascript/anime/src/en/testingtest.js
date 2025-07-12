@@ -7,7 +7,7 @@ const mangayomiSources = [{
   typeSource: "single",
   itemType: 1,
   version: "0.0.1",
-  pkgPath: "anime/src/en/hentaiwatch.js"
+  pkgPath: "anime/src/en/testingtest.js"
 }];
 
 class DefaultExtension extends MProvider {
