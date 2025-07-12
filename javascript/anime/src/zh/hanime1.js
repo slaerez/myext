@@ -8,7 +8,7 @@ const mangayomiSources = [{
   "itemType": 1,
   "isNsfw": true,
   "version": "0.0.1",
-  "pkgPath": ""
+  "pkgPath": "anime/src/zh/hanime1.js"
 }];
 
 class DefaultExtension extends MProvider {
