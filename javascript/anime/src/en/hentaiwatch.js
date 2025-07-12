@@ -1,5 +1,6 @@
 const mangayomiSources = [{
   "name": "HentaiWatch",
+  "id": 119938292,
   "lang": "en",
   "baseUrl": "https://watchhentai.net",
   "apiUrl": "https://watchhentai.net",
