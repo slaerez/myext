@@ -3,7 +3,7 @@ const mangayomiSources = [{
   "lang": "zh",
   "baseUrl": "https://hanime1.me",
   "apiUrl": "https://hanime1.me",
-  "iconUrl": "https://github.com/hubgit120/myext/blob/main/javascript/icon/zh.hanime1.png",
+  "iconUrl": "https://avatarfiles.alphacoders.com/358/thumb-1920-358564.png",
   "typeSource": "single",
   "itemType": 1,
   "isNsfw": true,
