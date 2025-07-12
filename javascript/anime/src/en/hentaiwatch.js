@@ -225,3 +225,5 @@ class DefaultExtension extends MProvider {
     return [];
   }
 }
+
+export default DefaultExtension;
