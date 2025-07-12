@@ -1,5 +1,6 @@
 const mangayomiSources = [{
   "name": "Hanime1",
+  "id": 902023872,
   "lang": "zh",
   "baseUrl": "https://hanime1.me",
   "apiUrl": "https://hanime1.me",
