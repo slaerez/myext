@@ -10,7 +10,7 @@ const mangayomiSources = [{
   "version": "0.0.1",
   "dateFormat": "",
   "dateFormatLocale": "",
-  "pkgPath": "javascript/anime/src/en/hentaiwatch.js"
+  "pkgPath": "anime/src/en/hentaiwatch.js"
 }];
 
 class DefaultExtension extends MProvider {
