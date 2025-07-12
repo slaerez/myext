@@ -8,6 +8,8 @@ const mangayomiSources = [{
   "itemType": 1,
   "isNsfw": true,
   "version": "0.0.1",
+  "dateFormat": "",
+  "dateFormatLocale": "",
   "pkgPath": "anime/src/en/hentaiwatch.js"
 }];
 
