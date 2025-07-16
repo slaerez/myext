@@ -4,7 +4,7 @@ const mangayomiSources = [{
   "lang": "all",
   "baseUrl": "https://rule34video.com",
   "apiUrl": "https://rule34video.com",
-  "iconUrl": "https://rule34video.com/favicon.ico",
+  "iconUrl": "https://raw.githubusercontent.com/hubgit120/myext/main/javascript/icon/all.rule34video.png",
   "typeSource": "single",
   "itemType": 1,
   "isNsfw": true,
