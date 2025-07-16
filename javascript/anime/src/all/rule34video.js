@@ -1,7 +1,7 @@
 const mangayomiSources = [{
   "name": "Rule34Video",
   "id": 902023999,
-  "lang": "en",
+  "lang": "all",
   "baseUrl": "https://rule34video.com",
   "apiUrl": "https://rule34video.com",
   "iconUrl": "https://rule34video.com/favicon.ico",
@@ -11,7 +11,7 @@ const mangayomiSources = [{
   "version": "0.0.1",
   "dateFormat": "",
   "dateFormatLocale": "",
-  "pkgPath": "anime/src/en/rule34video.js"
+  "pkgPath": "anime/src/all/rule34video.js"
 }];
 
 class DefaultExtension extends MProvider {
