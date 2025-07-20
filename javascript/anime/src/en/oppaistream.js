@@ -34,13 +34,12 @@ class DefaultExtension extends MProvider {
     
     
     async getPopular(page) {
-  // ❶ build the XHR URL oppai.stream actually uses
+  
   const url =
     `https://oppai.stream/actions/search.php` +
     `?text=&order=views&page=${page}&limit=35` +
     `&genres=&blacklist=&studio=&ibt=0&swa=1`;
 
-  // ❷ fetch the HTML with correct headers (same pattern as Rule34Video)
   const res = await this.client.get(url, this.getHeaders(url));
   const doc = new Document(res.body);
 
@@ -51,26 +50,26 @@ class DefaultExtension extends MProvider {
     const a = el.selectFirst("a");
     if (!a) return;
 
-    // absolute link to /watch?…
+    
     const href = a.attr("href") ?? "";
     const link = href.startsWith("http") ? href : `https://oppai.stream${href}`;
 
-    // title + optional episode number
+    
     const title = el.selectFirst("font.title")?.text?.trim() ?? "Untitled";
     const ep    = el.selectFirst("font.ep")?.text?.trim();
     const full  = ep ? `${title} – Episode ${ep}` : title;
 
-    // poster (falls back to empty string)
+    
     const poster = el.selectFirst("img.cover-img-in")?.attr("original") ?? "";
 
     items.push({
-      name: full,      // ← Mangayomi expects “name”
-      link,            //   and “link”
-      imageUrl: poster //   and “imageUrl”
+      name: full,      
+      link,            
+      imageUrl: poster 
     });
   });
 
-  // oppai returns exactly 35 items per page
+  
   const hasNextPage = elements.length === 35;
 
   return { list: items, hasNextPage };
@@ -83,13 +82,13 @@ class DefaultExtension extends MProvider {
         
     
     async getLatestUpdates(page) {
-  // ❶ change order=uploaded instead of views
+  
   const url =
     `https://oppai.stream/actions/search.php` +
     `?text=&order=uploaded&page=${page}&limit=35` +
     `&genres=&blacklist=&studio=&ibt=0&swa=1`;
 
-  // ❷ fetch and parse
+  
   const res = await this.client.get(url, this.getHeaders(url));
   const doc = new Document(res.body);
 
@@ -173,7 +172,6 @@ class DefaultExtension extends MProvider {
 
   const episodes = [];
 
-  // 1. Try to load from series page (if available)
   const seriesLink = doc.selectFirst("a:contains(All Episodes)")?.attr("href");
   if (seriesLink) {
     const fullSeriesUrl = seriesLink.startsWith("http")
@@ -200,7 +198,6 @@ class DefaultExtension extends MProvider {
     });
   }
 
-  // 2. If series page missing or incomplete, fallback to same-folder on-page episodes
   if (episodes.length === 0) {
     const currentEpisode = doc.selectFirst("div.in-grid.episode-shown");
     const folder = currentEpisode?.attr("folder")?.trim() ?? "";
@@ -225,7 +222,6 @@ class DefaultExtension extends MProvider {
     });
   }
 
-  // Fallback if absolutely nothing found
   if (episodes.length === 0) {
     episodes.push({
       name: title,
@@ -257,7 +253,6 @@ class DefaultExtension extends MProvider {
   const body = res.body;
   const videos = [];
 
-  // Match video sources (availableres JSON)
   const match = body.match(/var\s+availableres\s*=\s*(\{[^}]+\})/);
   if (match) {
     const jsonStr = match[1]
@@ -291,12 +286,12 @@ class DefaultExtension extends MProvider {
     throw new Error("No playable video URLs found.");
   }
 
-  // Find .vtt subtitle (e.g. _SUB_1.vtt)
+  
   const subtitleMatch = body.match(/<track[^>]+src=["']([^"']+?_SUB_\d+\.vtt)["']/i);
   if (subtitleMatch) {
     const subtitleUrl = subtitleMatch[1];
 
-    // ✅ Add to `subtitles` key on first stream
+    
     videos[0].subtitles = [
       {
         label: "English",
@@ -309,12 +304,6 @@ class DefaultExtension extends MProvider {
 }
 
 
-    
-    
-    // For manga chapter pages
-    async getPageList(url) {
-        throw new Error("getPageList not implemented");
-    }
     getFilterList() {
         throw new Error("getFilterList not implemented");
     }
