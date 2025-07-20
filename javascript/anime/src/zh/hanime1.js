@@ -140,15 +140,12 @@ class DefaultExtension extends MProvider {
   const doc = new Document(res.body);
   const body = doc.selectFirst("div#content-div");
 
-  // Title
   const title = body.selectFirst("h3#shareBtn-title")?.text?.trim() || "";
 
-  // Cover image from <video poster="">
   const imgEl = doc.selectFirst("video#player");
   let cover = imgEl ? imgEl.attr("poster") || "" : "";
   if (cover.startsWith("data:image")) cover = "";
 
-  // Description
   let desc = "";
   try {
     desc = body.selectFirst("div.video-caption-text")?.text?.trim() || "";
@@ -156,7 +153,6 @@ class DefaultExtension extends MProvider {
     desc = "";
   }
 
-  // Genres / tags
   let genres = [];
   try {
     genres = body.select("div.video-tags-wrapper div.single-video-tag a").map(e => e.text.trim());
@@ -164,7 +160,7 @@ class DefaultExtension extends MProvider {
     genres = [];
   }
 
-  // Chapters / episodes (usually just 1 video per page)
+  
   const chapters = [{
     name: title || "Episode 1",
     url: fullUrl,
