@@ -169,6 +169,7 @@ class DefaultExtension extends MProvider {
   const descFull = doc.selectFirst('meta[property="og:description"]')?.attr("content") ?? "";
   const description = descFull.split("|")[0].trim();
   const author = doc.selectFirst("h6.gray.line-5 a.red")?.text?.trim() ?? "";
+  const genres = Array.from(doc.select("div.tags h5.gray")).map(tag => tag.text);
 
   const episodes = [];
 
@@ -237,7 +238,7 @@ class DefaultExtension extends MProvider {
     imageUrl,
     description,
     author,
-    genres: [],
+    genre: genres,
     episodes
   };
 }
