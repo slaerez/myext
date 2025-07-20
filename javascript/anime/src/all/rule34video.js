@@ -105,7 +105,8 @@ class DefaultExtension extends MProvider {
   
           search(query, page) {
   const offset = (page - 1) * 24;
-  const url = `${this.getBaseUrl()}/search/${query}/?mode=async&function=get_block&block_id=custom_list_videos_videos_list_search&q=${query}&from_videos=${page}&from_albums=2&_=${Date.now()}`;
+  const cleanedQuery = query.trim().replace(/\s+/g, '+');
+  const url = `${this.getBaseUrl()}/search/${cleanedQuery}/?mode=async&function=get_block&block_id=custom_list_videos_videos_list_search&q=${cleanedQuery}&from_videos=${page}&from_albums=2&_=${Date.now()}`;
 
   return this.client.get(url, this.getHeaders(url)).then(res => {
     const doc = new Document(res.body);
