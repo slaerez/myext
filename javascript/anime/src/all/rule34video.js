@@ -152,8 +152,18 @@ class DefaultExtension extends MProvider {
 
   const title = doc.selectFirst("h1")?.text || "";
   const image = doc.selectFirst("video#player")?.attr("poster") || "";
-  const description = doc.selectFirst("div.video-infos div:contains('|')")?.text || "";
-  const author = doc.selectFirst(".col:has(.label:contains(Artist)) .value")?.text || "";
+  const infoSpans = Array.from(doc.select("div.info.row span"));
+  const description = infoSpans.map(s => s.text?.trim()).filter(Boolean).join(" | ");
+
+  //
+  const author = Array.from(
+  doc.select(".col:has(.label:contains(Artist)) span.name")
+)
+  .map(span => span.text.trim())
+  .filter(Boolean)
+  .join(", ");
+
+
   const genres = Array.from(doc.select("a.tag_item"))
     .map(tag => tag.text)
     .filter(tag => tag && !tag.includes("+") && !tag.includes("p"));
@@ -176,7 +186,6 @@ class DefaultExtension extends MProvider {
     ]
   };
 }
-
 
 
     async getVideoList(url) {
