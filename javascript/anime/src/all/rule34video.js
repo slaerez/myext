@@ -97,7 +97,7 @@ class DefaultExtension extends MProvider {
     }
   });
 
-  // Force hasNextPage = true to allow scrolling
+  
   const hasNextPage = true;
   return { list: items, hasNextPage };
 }
@@ -155,7 +155,7 @@ class DefaultExtension extends MProvider {
   const infoSpans = Array.from(doc.select("div.info.row span"));
   const description = infoSpans.map(s => s.text?.trim()).filter(Boolean).join(" | ");
 
-  //
+  
   const author = Array.from(
   doc.select(".col:has(.label:contains(Artist)) span.name")
 )
@@ -190,7 +190,7 @@ class DefaultExtension extends MProvider {
 
     async getVideoList(url) {
   const client = new Client();
-  // first request the page with our age cookie
+  
   const res = await client.get(url, {
     "Cookie": "age_verified=1",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
@@ -199,7 +199,7 @@ class DefaultExtension extends MProvider {
 
   const videos = [];
 
-  // 1) try flashvars JS first (best chance for 4K/2160p if present)
+  
   const qualityKeys = [
     { label: "2160p", key: "video_alt_url4" },
     { label: "1080p", key: "video_alt_url3" },
@@ -211,11 +211,11 @@ class DefaultExtension extends MProvider {
     const re = new RegExp(`${key}\\s*:\\s*['"]function/0/([^'"]+)['"]`);
     const m = body.match(re);
     if (m) {
-      // we already get the path after function/0/
+      
       const mp4Path = m[1];
       const indirect = `https://${this.source.baseUrl.replace(/^https?:\/\//, "")}${mp4Path}`;
       try {
-        // follow redirect to get final boomio-cdn URL
+        
         const r2 = await client.get(indirect, {
           "Referer": url,
           "Cookie": "age_verified=1",
@@ -230,7 +230,7 @@ class DefaultExtension extends MProvider {
     }
   }
 
-  // 2) if that came up empty, look for a <video src=...> fallback
+  
   if (videos.length === 0) {
     const vid = body.match(/<video[^>]+src=['"]([^'"]+)['"]/);
     if (vid) {
@@ -238,22 +238,22 @@ class DefaultExtension extends MProvider {
     }
   }
 
-  // 3) STILL empty? pull from the Download links section
+  
   if (videos.length === 0) {
-    // grab everything between the Download label and the next </div>
+    
     const dlSection = body.match(
       /<div[^>]*>\s*<div class="label">\s*Download\s*<\/div>([\s\S]*?)<\/div>/
     );
     if (dlSection) {
-      // match each <a ... href="..." ...>TEXT</a>
+      
       const linkRe = /<a[^>]+href="([^"]+)"[^>]*>([^<]+)<\/a>/g;
       let lm;
       while ((lm = linkRe.exec(dlSection[1])) !== null) {
         const href = lm[1];
-        const text = lm[2].trim(); // e.g. "MP4 1080p"
-        // only mp4 links
+        const text = lm[2].trim(); 
+        
         if (href.includes(".mp4")) {
-          // extract quality from text or from filename
+          
           const q = text.match(/(\d{3,4}p)/)?.[1] || "download";
           videos.push({
             url: href,
