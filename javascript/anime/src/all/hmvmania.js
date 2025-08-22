@@ -35,7 +35,6 @@ class DefaultExtension extends MProvider {
     
     
     async getPopular(page) {
-  // Only one static page
   if (page !== 1) {
     return { list: [], hasNextPage: false };
   }
@@ -170,7 +169,7 @@ class DefaultExtension extends MProvider {
   const episodes = [
     {
       name: title,
-      url: realUrl // use clean url for video loading
+      url: realUrl
     }
   ];
 
@@ -231,3 +230,4 @@ class DefaultExtension extends MProvider {
     }
 
 }
+
