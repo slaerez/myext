@@ -4,7 +4,7 @@ const mangayomiSources = [{
   "lang": "en",
   "baseUrl": "https://watchhentai.net",
   "apiUrl": "https://watchhentai.net",
-  "iconUrl": "https://raw.githubusercontent.com/slaerez/myext/main/javascript/icon/en.hentaiwatch.png",
+  "iconUrl": "https://i.pinimg.com/474x/14/52/f8/1452f83b6999575552cb96eb785ccbe7.jpg",
   "typeSource": "single",
   "itemType": 1,
   "isNsfw": true,
@@ -226,4 +226,5 @@ class DefaultExtension extends MProvider {
     return [];
   }
 }
+
 
