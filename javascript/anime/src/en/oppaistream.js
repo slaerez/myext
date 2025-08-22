@@ -180,19 +180,16 @@ class DefaultExtension extends MProvider {
     const seriesRes = await this.client.get(fullSeriesUrl, this.getHeaders(fullSeriesUrl));
     const seriesDoc = new Document(seriesRes.body);
 
-    Array.from(seriesDoc.select("div#allepisodes .in-grid")).forEach(ep => {
+    Array.from(seriesDoc.select("div#allepisodes .in-grid")).forEach((ep, i) => {
       const a = ep.selectFirst("a");
       if (!a) return;
 
-      const epNum = a.selectFirst("font.ep")?.text?.trim() ?? "";
-      const epTitle = a.selectFirst("font.title")?.text?.trim() ?? "Episode";
-      const epName = epNum ? `${epTitle} – Episode ${epNum}` : epTitle;
       const epUrl = a.attr("href")?.startsWith("http")
         ? a.attr("href")
         : `https://oppai.stream${a.attr("href")}`;
 
       episodes.push({
-        name: epName,
+        name: `Episode ${i + 1}`,
         url: epUrl
       });
     });
@@ -202,20 +199,18 @@ class DefaultExtension extends MProvider {
     const currentEpisode = doc.selectFirst("div.in-grid.episode-shown");
     const folder = currentEpisode?.attr("folder")?.trim() ?? "";
 
+    let count = 1;
     Array.from(doc.select("div.in-grid.episode-shown")).forEach(ep => {
       if (ep.attr("folder")?.trim() === folder) {
         const a = ep.selectFirst("a");
         if (!a) return;
 
-        const epNum = a.selectFirst("font.ep")?.text?.trim() ?? "";
-        const epTitle = a.selectFirst("font.title")?.text?.trim() ?? "Episode";
-        const epName = epNum ? `${epTitle} – Episode ${epNum}` : epTitle;
         const epUrl = a.attr("href")?.startsWith("http")
           ? a.attr("href")
           : `https://oppai.stream${a.attr("href")}`;
 
         episodes.push({
-          name: epName,
+          name: `Episode ${count++}`,
           url: epUrl
         });
       }
@@ -224,7 +219,7 @@ class DefaultExtension extends MProvider {
 
   if (episodes.length === 0) {
     episodes.push({
-      name: title,
+      name: "Episode 1",
       url: url
     });
   }
@@ -238,7 +233,6 @@ class DefaultExtension extends MProvider {
     episodes
   };
 }
-
 
 
 
@@ -311,3 +305,4 @@ class DefaultExtension extends MProvider {
         throw new Error("getSourcePreferences not implemented");
     }
 }
+
