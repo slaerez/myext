@@ -184,39 +184,46 @@ class DefaultExtension extends MProvider {
 
 
   async getVideoList(url) {
-    const res = await this.client.get(url, this.getHeaders(url));
-    const doc = new Document(res.body);
+  const res = await this.client.get(url, this.getHeaders(url));
+  const doc = new Document(res.body);
 
-    const videoEl = doc.selectFirst("video#player");
-    if (!videoEl) throw new Error("❌ <video> element not found");
+  const videoEl = doc.selectFirst("video#player");
+  if (!videoEl) throw new Error("❌ <video> element not found");
 
-    const sources = doc.select("video > source").map(source => {
-      const file = source.attr("src");
-      const quality = source.attr("size") || "Unknown";
-      return {
-        url: file,
-        originalUrl: file,
-        quality,
-        headers: this.getHeaders(url)
-      };
-    });
+  let sources = doc.select("video > source").map(source => {
+    const file = source.attr("src");
+    const quality = source.attr("size") || "Unknown";
+    return {
+      url: file,
+      originalUrl: file,
+      quality,
+      headers: this.getHeaders(url)
+    };
+  });
 
-    if (sources.length > 0) return sources;
+  sources.sort((a, b) => {
+    const qa = parseInt(a.quality, 10) || 0;
+    const qb = parseInt(b.quality, 10) || 0;
+    return qb - qa; // higher first
+  });
 
-    const fallback = videoEl.attr("src");
-    if (fallback) {
-      return [{
-        url: fallback,
-        originalUrl: fallback,
-        quality: "Unknown",
-        headers: this.getHeaders(url)
-      }];
-    }
+  if (sources.length > 0) return sources;
 
-    throw new Error("❌ No video source found");
+  const fallback = videoEl.attr("src");
+  if (fallback) {
+    return [{
+      url: fallback,
+      originalUrl: fallback,
+      quality: "Unknown",
+      headers: this.getHeaders(url)
+    }];
   }
+
+  throw new Error("❌ No video source found");
+}
 
   getSourcePreferences() {
     return [];
   }
 }
+
