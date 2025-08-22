@@ -1,6 +1,6 @@
 const mangayomiSources = [{
     "name": "HMVMania",
-    "id: 985627280,
+    "id": 985627280,
     "lang": "all",
     "baseUrl": "https://hmvmania.com",
     "apiUrl": "",
@@ -229,4 +229,5 @@ class DefaultExtension extends MProvider {
     getSourcePreferences() {
         throw new Error("getSourcePreferences not implemented");
     }
+
 }
