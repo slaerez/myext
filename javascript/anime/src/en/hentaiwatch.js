@@ -119,56 +119,65 @@ class DefaultExtension extends MProvider {
   }
 
   async getDetail(url) {
-    const fullUrl = url.startsWith("http") ? url : this.getBaseUrl() + url;
-    const res = await this.client.get(fullUrl, this.getHeaders(fullUrl));
-    const doc = new Document(res.body);
-    const body = doc.selectFirst("div#single");
+  const fullUrl = url.startsWith("http") ? url : this.getBaseUrl() + url;
+  const res = await this.client.get(fullUrl, this.getHeaders(fullUrl));
+  const doc = new Document(res.body);
+  const body = doc.selectFirst("div#single");
 
-    const title = body.selectFirst("h1")?.text?.trim() || "";
+  const title = body.selectFirst("h1")?.text?.trim() || "";
 
-    const imgEl = body.selectFirst("div.poster img");
-    let cover = imgEl ? (imgEl.attr("data-src") || imgEl.attr("src") || "") : "";
-    if (cover.startsWith("data:image")) cover = "";
+  const imgEl = body.selectFirst("div.poster img");
+  let cover = imgEl ? (imgEl.attr("data-src") || imgEl.attr("src") || "") : "";
+  if (cover.startsWith("data:image")) cover = "";
 
-    let desc = "";
-    try {
-      desc = body.selectFirst("div.synopsis")?.text?.trim() || "";
-      if (!desc || desc.toLowerCase() === "synopsis") {
-        desc = body.selectFirst("div.wp-content > p")?.text?.trim() || "";
-      }
-    } catch {
-      desc = "";
+  let desc = "";
+  try {
+    desc = body.selectFirst("div.synopsis")?.text?.trim() || "";
+    if (!desc || desc.toLowerCase() === "synopsis") {
+      desc = body.selectFirst("div.wp-content > p")?.text?.trim() || "";
     }
+  } catch {
+    desc = "";
+  }
 
-    let genres = [];
-    try {
-      genres = body.select("div.sgeneros a").map(e => e.text.trim());
-    } catch {
-      genres = [];
-    }
+  let genres = [];
+  try {
+    genres = Array.from(body.select("div.sgeneros a")).map(e => e.text.trim());
+  } catch {
+    genres = [];
+  }
 
-    const chapters = body.select("ul.episodios li").map(el => {
-      const a = el.selectFirst(".episodiotitle a");
-      return {
-        name: a?.text?.trim() || "Episode",
-        url: a?.attr("href") || "",
-        scanlator: "",
-        dateUpload: ""
-      };
-    });
+  const chapters = Array.from(body.select("ul.episodios li")).map((el, idx) => {
+    const a = el.selectFirst(".episodiotitle a");
+    const rawName = a?.text?.trim() || `Episode ${idx + 1}`;
+    const href = a?.attr("href") || "";
+
+    
+    let number = parseFloat((rawName.match(/(\d+(?:\.\d+)?)/)?.[1] ?? ""));
+    if (Number.isNaN(number)) number = idx + 1;
+
+    const absUrl = href.startsWith("http") ? href : this.getBaseUrl() + href;
 
     return {
-      name: title,
-      imageUrl: cover,
-      description: desc,
-      author: null,
-      artist: null,
-      genre: genres,
-      link: fullUrl,
-      status: 0,
-      chapters: chapters
+      name: rawName,
+      url: absUrl,
+      scanlator: "",
+      number
     };
-  }
+  });
+
+  return {
+    name: title,
+    imageUrl: cover,
+    description: desc,
+    author: null,
+    artist: null,
+    genre: genres,
+    link: fullUrl,
+    status: 0,
+    chapters: chapters
+  };
+}
 
   async getVideoList(url) {
   const res = await this.client.get(url, this.getHeaders(this.getBaseUrl() + url));
