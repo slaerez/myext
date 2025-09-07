@@ -172,15 +172,16 @@ class DefaultExtension extends MProvider {
 
   const episodes = [];
 
-  const seriesLink = doc.selectFirst("a:contains(All Episodes)")?.attr("href");
-  if (seriesLink) {
-    const fullSeriesUrl = seriesLink.startsWith("http")
-      ? seriesLink
-      : `https://oppai.stream${seriesLink}`;
-    const seriesRes = await this.client.get(fullSeriesUrl, this.getHeaders(fullSeriesUrl));
-    const seriesDoc = new Document(seriesRes.body);
+  const currentEpisode = doc.selectFirst("div.in-grid.episode-shown");
+  const rawName = currentEpisode?.attr("name")?.trim() ?? "";
+  const normalizedSeriesTitle = rawName.replace(/[^\w\s]/g, "").toLowerCase();
 
-    Array.from(seriesDoc.select("div#allepisodes .in-grid")).forEach((ep, i) => {
+  let count = 1;
+  Array.from(doc.select("div.in-grid.episode-shown")).forEach(ep => {
+    const epName = ep.attr("name")?.trim() ?? "";
+    const normalizedEpName = epName.replace(/[^\w\s]/g, "").toLowerCase();
+
+    if (normalizedEpName === normalizedSeriesTitle) {
       const a = ep.selectFirst("a");
       if (!a) return;
 
@@ -189,33 +190,11 @@ class DefaultExtension extends MProvider {
         : `https://oppai.stream${a.attr("href")}`;
 
       episodes.push({
-        name: `Episode ${i + 1}`,
+        name: `Episode ${count++}`,
         url: epUrl
       });
-    });
-  }
-
-  if (episodes.length === 0) {
-    const currentEpisode = doc.selectFirst("div.in-grid.episode-shown");
-    const folder = currentEpisode?.attr("folder")?.trim() ?? "";
-
-    let count = 1;
-    Array.from(doc.select("div.in-grid.episode-shown")).forEach(ep => {
-      if (ep.attr("folder")?.trim() === folder) {
-        const a = ep.selectFirst("a");
-        if (!a) return;
-
-        const epUrl = a.attr("href")?.startsWith("http")
-          ? a.attr("href")
-          : `https://oppai.stream${a.attr("href")}`;
-
-        episodes.push({
-          name: `Episode ${count++}`,
-          url: epUrl
-        });
-      }
-    });
-  }
+    }
+  });
 
   if (episodes.length === 0) {
     episodes.push({
@@ -233,7 +212,6 @@ class DefaultExtension extends MProvider {
     episodes
   };
 }
-
 
 
     async getVideoList(url) {
@@ -305,4 +283,5 @@ class DefaultExtension extends MProvider {
         throw new Error("getSourcePreferences not implemented");
     }
 }
+
 
