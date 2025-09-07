@@ -106,14 +106,14 @@ class DefaultExtension extends MProvider {
           search(query, page) {
   const offset = (page - 1) * 24;
   const cleanedQuery = query.trim().replace(/\s+/g, '+');
-  const url = `${this.getBaseUrl()}/search/${cleanedQuery}/?mode=async&function=get_block&block_id=custom_list_videos_videos_list_search&q=${cleanedQuery}&from_videos=${page}&from_albums=2&_=${Date.now()}`;
+  const url = `${this.getBaseUrl()}/search/${cleanedQuery}/?mode=async&function=get_block&block_id=custom_list_videos_videos_list_search&q=${cleanedQuery}&sort_by=post_date&from_videos=${page}&from_albums=2&_=${Date.now()}`;
 
   return this.client.get(url, this.getHeaders(url)).then(res => {
     const doc = new Document(res.body);
     const items = [];
 
     const elements = Array.from(doc.select("div.item.thumb[class*=video_]"));
-    console.log(`🔍 Found ${elements.length} video blocks for search '${query}'`);
+    console.log(`Found ${elements.length} video blocks for search '${query}'`);
 
     elements.forEach((el, index) => {
       try {
@@ -126,12 +126,12 @@ class DefaultExtension extends MProvider {
 
         if (title && link && imageUrl) {
           items.push({ name: title, link, imageUrl });
-          console.log(`✅ [${index}] ${title}`);
+          console.log(`[${index}] ${title}`);
         } else {
-          console.warn(`❌ Skipping [${index}] | title: ${title}, link: ${link}, image: ${imageUrl}`);
+          console.warn(`Skipping [${index}] | title: ${title}, link: ${link}, image: ${imageUrl}`);
         }
       } catch (err) {
-        console.warn(`❌ Error at [${index}]: ${err.message}`);
+        console.warn(`Error at [${index}]: ${err.message}`);
       }
     });
 
@@ -139,6 +139,7 @@ class DefaultExtension extends MProvider {
     return { list: items, hasNextPage };
   });
 }
+
 
 
     async getDetail(url) {
@@ -278,3 +279,4 @@ class DefaultExtension extends MProvider {
     return [];
   }
 }
+
