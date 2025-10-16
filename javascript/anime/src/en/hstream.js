@@ -219,32 +219,42 @@ class DefaultExtension extends MProvider {
   const streamPath = `${releaseYear}/${streamTitle}/${episodeNum}`;
   const subtitleUrl = `${domain}/${streamPath}/eng.ass`;
 
-  const qualities = ["2160", "1080", "720"];
+  const baseHeaders = {
+    Referer: "https://hstream.moe",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  };
 
-  
+  const has2160i = html.includes('tags%5B0%5D=4k-48fps');
+  const has1080i = html.includes('tags%5B0%5D=48fps');
+
+  const qualities = [];
+
+  if (has2160i) qualities.push("2160i");
+  qualities.push("2160");
+  if (has1080i) qualities.push("1080i");
+  qualities.push("1080", "720");
+
   qualities.forEach((q) => {
     const mpd = `${domain}/${streamPath}/${q}/manifest.mpd`;
+
+    let label = q;
+    if (q === "2160i") label = "2160p 48fps";
+    else if (q === "1080i") label = "1080p 48fps";
+
     videos.push({
       url: mpd,
       originalUrl: mpd,
-      quality: q,
-      headers: {
-        Referer: "https://hstream.moe",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
-      }
+      quality: label,
+      headers: baseHeaders
     });
   });
 
-  
   const fallbackMp4 = `${domain}/${streamPath}/x264.720p.mp4`;
   videos.push({
     url: fallbackMp4,
     originalUrl: fallbackMp4,
     quality: "720p MP4 (fallback)",
-    headers: {
-      Referer: "https://hstream.moe",
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
-    }
+    headers: baseHeaders
   });
 
   if (videos.length > 0) {
@@ -266,6 +276,7 @@ class DefaultExtension extends MProvider {
 
 
 
+
   getFilterList() {
     throw new Error("getFilterList not implemented");
   }
@@ -274,3 +285,4 @@ class DefaultExtension extends MProvider {
     throw new Error("getSourcePreferences not implemented");
   }
 }
+
