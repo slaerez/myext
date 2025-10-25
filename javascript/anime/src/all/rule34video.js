@@ -71,7 +71,7 @@ class DefaultExtension extends MProvider {
 
   async getLatestUpdates(page) {
   const offset = (page - 1) * 36;
-  const url = `${this.getBaseUrl()}/?mode=async&function=get_block&block_id=custom_list_videos_most_recent_videos&sort_by=video_added&from=${offset}&_=${Date.now()}`;
+  const url = `${this.getBaseUrl()}/?mode=async&function=get_block&block_id=custom_list_videos_most_recent_videos&sort_by=post_date&from=${page}&_=${Date.now()}`;
   const res = await this.client.get(url, this.getHeaders(url));
   const doc = new Document(res.body);
 
@@ -279,4 +279,5 @@ class DefaultExtension extends MProvider {
     return [];
   }
 }
+
 
